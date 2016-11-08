@@ -7,6 +7,8 @@ using namespace std;
 #include <string.h>
 #include "aggregator.h"
 
+#define LARGEST_HST "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+
 
 void Aggregator::injest(const char *filename)
 {
@@ -92,8 +94,8 @@ void Aggregator::flush()
         delete op->key;
         delete op->value_hst;
         delete op;
-        records.erase(it);
     }
+    records.clear();
     out.close();
     printf("Iterations(%d): Wrote %d records to file %s\n", 
             _iterations, count, fname);
@@ -134,7 +136,7 @@ void Aggregator::merge()
         char key[32];
         char val[100];
         File *obj = NULL;
-        strcpy(old_key, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+        strcpy(old_key, LARGEST_HST);
         for(it = op_files.begin(); it != op_files.end(); ++it) {
             File *elem = (*it);
             if (elem->eof)
@@ -161,7 +163,7 @@ void Aggregator::merge()
         }
         if (obj != NULL) {
             fprintf(output, "%s %d %s\n", old_key, old_cnt, old_val);
-            printf("Lowest Key: %s\n", old_key);
+            //printf("Lowest Key: %s\n", old_key);
             fgets(obj->line, 256, obj->fp);
             if (feof(obj->fp))
                 obj->eof = true;
