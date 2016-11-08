@@ -62,6 +62,10 @@ class Aggregator
     void cmp_update_value(Output *o, string value);
     // Write out in-memory contents to disk in the "output" format
     void flush();
-    // XXX
+    // Given a vector of intermediate files that are sorted, 
+    // 1. merge the contents of the files to a single output file. 
+    // 2. Update the "count" variable to be the cumulative count for a "key" across all intermediate 
+    // files
+    // 3. Update the "value" to be HST across all the intermediate files
     void merge();
 };
